@@ -1,0 +1,157 @@
+package com.example.threthings;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+public class MainActivity extends AppCompatActivity {
+    private static final String FILE_NAME = "example.txt";
+
+    private static final String FILE_NAME2 = "exx.txt";
+    private static final String FILE_NAME3 = "exxx.txt";
+
+    EditText c1,c2,c3;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        c1 = findViewById(R.id.editTextTextPersonName);
+        c2 = findViewById(R.id.editTextTextPersonName2);
+        c3 = findViewById(R.id.editTextTextPersonName3);
+
+
+    }
+    public void save(View v){
+        String text = c1.getText().toString();
+        String text2 = c2.getText().toString();
+        String text3 = c3.getText().toString();
+
+        FileOutputStream fos = null;
+
+        FileOutputStream sop = null;
+
+        FileOutputStream dop = null;
+
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos.write(text.getBytes());
+
+            sop = openFileOutput(FILE_NAME2, MODE_PRIVATE);
+            sop.write(text2.getBytes());
+
+            dop = openFileOutput(FILE_NAME3, MODE_PRIVATE);
+            dop.write(text3.getBytes());
+
+            c1.getText().clear();
+            c2.getText().clear();
+            c3.getText().clear();
+            Toast.makeText(this, "save to" + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            if(fos != null){
+                try {
+                    fos.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if(sop != null){
+                try {
+                    sop.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if(dop != null){
+                try {
+                    dop.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void load(View v ) {
+        FileInputStream fis = null;
+        FileInputStream sip = null;
+        FileInputStream dip = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            sip = openFileInput(FILE_NAME2);
+            dip = openFileInput(FILE_NAME3);
+
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+
+            InputStreamReader sisr = new InputStreamReader(sip);
+            BufferedReader sbr = new BufferedReader(sisr);
+            StringBuilder ssb = new StringBuilder();
+
+            InputStreamReader disr = new InputStreamReader(dip);
+            BufferedReader dbr = new BufferedReader(disr);
+            StringBuilder dsb = new StringBuilder();
+
+            String text,text2,text3;
+
+            while ((text3 = dbr.readLine()) != null){
+                dsb.append(text3).append("\n");
+            }
+            c3.setText(dsb.toString());
+
+            while ((text2 = sbr.readLine()) != null){
+                ssb.append(text2).append("\n");
+            }
+            c2.setText(ssb.toString());
+            while ((text = br.readLine()) != null){
+                sb.append(text).append("\n");
+            }
+            c1.setText(sb.toString());
+
+
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            if(fis != null){
+                try{
+                    fis.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if(sip != null){
+                try{
+                    sip.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+            if(dip != null){
+                try{
+                    dip.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
